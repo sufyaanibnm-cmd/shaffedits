@@ -29,10 +29,10 @@ function initials(name: string) {
 const CARD_WIDTH = 320;
 const CARD_HEIGHT = 420;
 const PERSPECTIVE = 900; // was 1700 — same look, cheaper to composite
-const SCALE_STEP = 0.16;
-const SPREAD = 230;
-const TILT = 45;
-const DURATION = 0.12;
+const SPREAD = 210;
+const TILT = 28;
+const SCALE_STEP = 0.12;
+const DURATION = 0.45;
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 const AUTOPLAY_MS = 5000;
 const DRAG_THRESHOLD = 90;
@@ -49,7 +49,6 @@ const BASE_CARD_STYLE: CSSProperties = {
   overflow: "hidden",
   transformOrigin: "center center",
   background: "#0a0a0a",
-  border: "1px solid rgba(255,255,255,0.06)",
 };
 
 const textVariants = {
@@ -157,10 +156,10 @@ export function Team() {
 
   // Only the previous, current, and next member are rendered — not all 6 —
   // so a state change only ever touches 3 DOM nodes.
-  const visible = [-1, 0, 1].map((rel) => ({
-    rel,
-    index: ((active + rel) % n + n) % n,
-  }));
+  const visible = [-2, -1, 0, 1, 2].map((rel) => ({
+  rel,
+  index: ((active + rel) % n + n) % n,
+}));
 
   const transitionCss = `transform ${DURATION}s ${EASE}, opacity ${DURATION}s ${EASE}`;
 
@@ -217,7 +216,7 @@ export function Team() {
           {/* Ambient glow — Tailwind's blur-3xl (64px) instead of a 140px blur */}
           <div
             aria-hidden
-            className="pointer-events-none absolute w-700px h-500px blur-120px rounded-full bg-white/8 blur-3xl"
+            className="pointer-events-none absolute w-[700px] h-[500px] rounded-full bg-white/8 blur-[120px]"
           />
 
           <motion.div
@@ -236,15 +235,31 @@ export function Team() {
               const tx = rel * SPREAD;
               const ry = -rel * TILT;
 
+              const distance = Math.abs(rel);
+              const zIndex = 10 - distance;
+
+              const opacity =
+                distance === 0
+                  ? 1
+                  : distance === 1
+                  ? 0.75
+                  : 0.25;
+
               const cardStyle: CSSProperties = {
                 ...BASE_CARD_STYLE,
-                // No translateZ / preserve-3d: rotateY + perspective on the
-                // parent is enough to read as 3D, without stacking a second
-                // GPU-heavy 3D compositing layer per card.
+
+                zIndex,
+
                 transform: `translate(-50%, -50%) translateX(${tx}px) rotateY(${ry}deg) scale(${sc})`,
                 transition: transitionCss,
-                opacity: isActive ? 1 : 0.75,
+                opacity,
+
+                border: isActive
+                  ? "1px solid rgba(255,255,255,0.08)"
+                  : "1px solid transparent",
+
                 cursor: isActive ? "default" : "pointer",
+
                 boxShadow: isActive
                   ? "0 20px 40px rgba(255,255,255,0.10)"
                   : "0 10px 20px rgba(255,255,255,0.04)",
@@ -358,39 +373,71 @@ function CoverCard({
         {/* Spotlight sweep — a single CSS transition on hover, not continuous */}
         <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
 
-        {isActive && (
+        <motion.div
+          className={`absolute bottom-0 w-full border-t border-white/10 bg-black/70 transition-all duration-300 ${
+            isActive ? "p-8" : "p-5"
+          }`}
+          style={{
+            minHeight: isActive ? 210 : 120,
+          }}
+          variants={isActive ? textVariants : undefined}
+          initial={isActive ? "hidden" : false}
+          animate={isActive ? "show" : false}
+        >
           <motion.div
-            variants={textVariants}
-            initial="hidden"
-            animate="show"
-            className="absolute bottom-0 w-full border-t border-white/10 bg-black/70 p-8"
+            variants={isActive ? lineVariants : undefined}
+            className={`mb-4 flex items-center justify-center rounded-full border border-white/20 bg-white/5 font-display font-bold transition-all duration-300 ${
+              isActive
+                ? "h-16 w-16 text-xl"
+                : "h-12 w-12 text-base opacity-80"
+            }`}
           >
-            <motion.div
-              variants={lineVariants}
-              className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-white/20 bg-white/5 font-display text-xl font-bold"
-            >
-              {initials(member.name)}
-            </motion.div>
-            <motion.h3
-              variants={lineVariants}
-              className="font-display text-xl font-black tracking-tight"
-            >
-              {member.name}
-            </motion.h3>
-            <motion.p
-              variants={lineVariants}
-              className="mt-1 text-xs uppercase tracking-[0.35em] text-white/50"
-            >
-              {member.role}
-            </motion.p>
-            <motion.p
-              variants={lineVariants}
-              className="mt-3 text-sm leading-8 text-white/55"
-            >
-              {member.bio}
-            </motion.p>
+            {initials(member.name)}
           </motion.div>
-        )}
+
+          <motion.h3
+            variants={isActive ? lineVariants : undefined}
+            className={`font-display tracking-tight transition-all duration-300 ${
+              isActive
+                ? "text-xl font-black"
+                : "text-lg font-semibold text-white/90"
+            }`}
+          >
+            {member.name}
+          </motion.h3>
+
+          <motion.p
+            variants={isActive ? lineVariants : undefined}
+            className={`uppercase transition-all duration-300 ${
+              isActive
+                ? "mt-1 text-xs tracking-[0.35em] text-white/50"
+                : "mt-1 text-[10px] tracking-[0.2em] text-white/40"
+            }`}
+          >
+            {member.role}
+          </motion.p>
+
+          <motion.p
+            variants={isActive ? lineVariants : undefined}
+            className={`mt-4 transition-all duration-300 ${
+              isActive
+                ? "text-sm leading-8 text-white/55"
+                : "text-xs leading-5 text-white/35"
+            }`}
+            style={
+              !isActive
+                ? {
+                    display: "-webkit-box",
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }
+                : undefined
+            }
+          >
+            {member.bio}
+          </motion.p>
+        </motion.div>
       </div>
     </div>
   );
