@@ -30,13 +30,12 @@ const CARD_WIDTH = 320;
 const CARD_HEIGHT = 420;
 const PERSPECTIVE = 900; // was 1700 — same look, cheaper to composite
 const SCALE_STEP = 0.16;
-const SPREAD = 190;
-const TILT = 34;
-const DURATION = 0.6;
+const SPREAD = 230;
+const TILT = 45;
+const DURATION = 0.12;
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 const AUTOPLAY_MS = 5000;
 const DRAG_THRESHOLD = 90;
-const WHEEL_THRESHOLD = 40;
 
 // Fixed per-card styling pulled out of the render loop so we're not
 // re-declaring the same literal object on every render.
@@ -68,9 +67,7 @@ export function Team() {
   const [isPaused, setIsPaused] = useState(false);
   const pausedRef = useRef(false);
   const inViewRef = useRef(false);
-  const wheelCooldown = useRef(false);
   const sceneRef = useRef<HTMLDivElement>(null);
-
   const lockRef = useRef(false);
   const lock = useCallback(() => {
     lockRef.current = true;
@@ -126,19 +123,6 @@ export function Team() {
     [step, goTo, n],
   );
 
-  // ---- Mouse wheel navigation ----
-  const onWheel = useCallback(
-    (e: React.WheelEvent) => {
-      if (Math.abs(e.deltaY) < WHEEL_THRESHOLD || wheelCooldown.current) return;
-      wheelCooldown.current = true;
-      step(e.deltaY > 0 ? 1 : -1);
-      window.setTimeout(() => {
-        wheelCooldown.current = false;
-      }, 350);
-    },
-    [step],
-  );
-
   // ---- Drag navigation (swipe) ----
   const onDragEnd = useCallback(
     (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -161,15 +145,7 @@ export function Team() {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-
-  useEffect(() => {
-    if (n < 2) return;
-    const id = window.setInterval(() => {
-      if (!pausedRef.current && inViewRef.current) step(1);
-    }, AUTOPLAY_MS);
-    return () => window.clearInterval(id);
-  }, [n, step]);
-
+  
   const handleMouseEnterScene = () => {
     pausedRef.current = true;
     setIsPaused(true);
@@ -190,7 +166,7 @@ export function Team() {
 
   return (
     <section
-      className="relative overflow-hidden px-6 py-28 text-white md:py-40"
+      className="relative overflow-hidden px-6 pt-44 pb-28 text-white md:pt-56 md:pb-40"
       style={{ background: "radial-gradient(circle at top, #232323 0%, #050505 62%)" }}
     >
       <div className="relative mx-auto max-w-6xl">
@@ -199,7 +175,7 @@ export function Team() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
-          className="mb-16 flex items-end justify-between gap-6"
+          className="mb-8 flex items-end justify-between gap-6"
         >
           <div>
             <p className="mb-4 text-xs font-medium uppercase tracking-[0.4em] text-white/50">
@@ -226,20 +202,22 @@ export function Team() {
         <div
           ref={sceneRef}
           className="relative mx-auto flex items-center justify-center outline-none"
-          style={{ perspective: PERSPECTIVE, minHeight: CARD_HEIGHT + 60 }}
+          style={{
+              perspective: PERSPECTIVE,
+              minHeight: CARD_HEIGHT + 180,
+          }}
           tabIndex={0}
           role="group"
           aria-roledescription="carousel"
           aria-label="Team members"
           onKeyDown={onKeyDown}
-          onWheel={onWheel}
           onMouseEnter={handleMouseEnterScene}
           onMouseLeave={handleMouseLeaveScene}
         >
           {/* Ambient glow — Tailwind's blur-3xl (64px) instead of a 140px blur */}
           <div
             aria-hidden
-            className="pointer-events-none absolute h-[420px] w-[420px] rounded-full bg-white/8 blur-3xl"
+            className="pointer-events-none absolute w-700px h-500px blur-120px rounded-full bg-white/8 blur-3xl"
           />
 
           <motion.div
@@ -265,7 +243,7 @@ export function Team() {
                 // GPU-heavy 3D compositing layer per card.
                 transform: `translate(-50%, -50%) translateX(${tx}px) rotateY(${ry}deg) scale(${sc})`,
                 transition: transitionCss,
-                opacity: isActive ? 1 : 0.55,
+                opacity: isActive ? 1 : 0.75,
                 cursor: isActive ? "default" : "pointer",
                 boxShadow: isActive
                   ? "0 20px 40px rgba(255,255,255,0.10)"
@@ -315,7 +293,7 @@ export function Team() {
           </div>
 
           <p className="text-xs uppercase tracking-widest text-white/40">
-            Drag, scroll, or use ← → · Space/Enter advances · {isPaused ? "paused" : "autoplay on"}
+            Use the arrows, drag, or click a card.
           </p>
         </div>
       </div>
@@ -385,7 +363,7 @@ function CoverCard({
             variants={textVariants}
             initial="hidden"
             animate="show"
-            className="absolute bottom-0 w-full border-t border-white/10 bg-black/70 p-6"
+            className="absolute bottom-0 w-full border-t border-white/10 bg-black/70 p-8"
           >
             <motion.div
               variants={lineVariants}
@@ -407,7 +385,7 @@ function CoverCard({
             </motion.p>
             <motion.p
               variants={lineVariants}
-              className="mt-3 text-sm leading-8 text-white/70"
+              className="mt-3 text-sm leading-8 text-white/55"
             >
               {member.bio}
             </motion.p>
