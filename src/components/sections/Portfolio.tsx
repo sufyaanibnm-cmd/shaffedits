@@ -163,9 +163,12 @@ export function Portfolio() {
 
                 <button
                   type="button"
-                  className="relative z-30 flex h-12 w-12 items-center justify-center rounded-full border border-white transition-all duration-300 group-hover:bg-white group-hover:text-black"
+                  className="relative z-30 flex h-12 w-12 items-center justify-center rounded-full
+                            border border-transparent
+                            transition-all duration-300
+                            hover:border-white hover:bg-white hover:text-black"
                 >
-                  <ArrowUpRight className="h-5 w-5 transition-transform duration-300 group-hover:rotate-45" />
+                  <ArrowUpRight className="h-5 w-5 transition-transform duration-300 hover:rotate-45" />
                 </button>
 
               </div>
