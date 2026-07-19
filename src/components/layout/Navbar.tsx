@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { NavLink } from "../ui/NavLink";
@@ -16,80 +16,209 @@ const links = [
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      const current = window.scrollY;
+
+      setScrolled(current > 20);
+
+      if (current > lastScrollY.current && current > 120) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+
+      lastScrollY.current = current;
+    };
+
     onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+
+    window.addEventListener("scroll", onScroll, {
+      passive: true,
+    });
+
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <motion.header
-      initial={{ y: -30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, delay: 1.4, ease: "easeOut" }}
+      initial={{ y: -40, opacity: 0 }}
+      animate={{
+        y: hidden ? -120 : 0,
+        opacity: hidden ? 0 : 1,
+      }}
+      transition={{
+        duration: 0.4,
+        ease: [0.25, 1, 0.5, 1],
+      }}
       className="fixed left-1/2 top-4 z-50 w-[min(96vw,1100px)] -translate-x-1/2 md:top-6"
     >
       <motion.div
-        animate={{ borderRadius: open ? 20 : 9999 }}
-        transition={{ duration: 0.35, ease: [0.77, 0, 0.175, 1] }}
+        animate={{
+          borderRadius: open ? 24 : 9999,
+          scale: scrolled ? 0.98 : 1,
+        }}
+        transition={{
+          duration: 0.35,
+          ease: [0.25, 1, 0.5, 1],
+        }}
         className={cn(
-          "border border-white/10 bg-black/50 backdrop-blur-xl transition-shadow",
-          scrolled && "shadow-[0_10px_40px_-10px_rgba(0,0,0,0.6)]",
+          "relative overflow-hidden border backdrop-blur-2xl transition-all duration-300",
+          scrolled
+            ? "border-white/15 bg-black/70 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+            : "border-white/10 bg-white/[0.05]"
         )}
       >
-        <div className="flex items-center justify-between gap-6 px-5 py-3 md:px-7">
-          <a href="#top" className="flex items-center gap-2 text-white">
-            <img src={logo} alt="SHAFFEDITS" className="h-12 w-auto object-contain" />
-            
-          </a>
-          <nav className="hidden items-center gap-8 md:flex">
-            {links.map((l) => (
-              <NavLink key={l.href} href={l.href} label={l.label} />
+        {/* Soft glow */}
+        <div className="pointer-events-none absolute inset-0 rounded-full bg-white/[0.03] blur-2xl" />
+
+        <div className="relative flex items-center justify-between gap-6 px-5 py-3 md:px-7">
+          {/* Logo */}
+          <motion.a
+            href="#top"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.2 }}
+            className="flex items-center"
+          >
+            <img
+              src={logo}
+              alt="SHAFFEDITS"
+              className="h-12 w-auto object-contain"
+            />
+          </motion.a>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden items-center gap-10 md:flex">
+            {links.map((link) => (
+              <NavLink
+                key={link.href}
+                href={link.href}
+                label={link.label}
+              />
             ))}
           </nav>
-          <a
+
+          {/* CTA */}
+          <motion.a
             href="#contact"
-            className="hidden rounded-full bg-white px-5 py-2 text-xs font-semibold uppercase tracking-wider text-black transition-transform hover:-translate-y-0.5 md:inline-block"
+            whileHover={{
+              scale: 1.05,
+            }}
+            whileTap={{
+              scale: 0.98,
+            }}
+            className="
+              hidden
+              md:inline-flex
+              items-center
+              justify-center
+              rounded-full
+              bg-gradient-to-r
+              from-white
+              to-gray-300
+              px-6
+              py-2.5
+              text-xs
+              font-semibold
+              uppercase
+              tracking-[0.18em]
+              text-black
+              shadow-lg
+              shadow-white/10
+              transition-all
+              duration-300
+              hover:shadow-white/30
+            "
           >
             Book a Call
-          </a>
+          </motion.a>
+
+          {/* Mobile Toggle */}
           <button
             aria-label={open ? "Close menu" : "Open menu"}
-            className="text-white md:hidden"
+            className="text-white transition-transform duration-300 hover:scale-110 md:hidden"
             onClick={() => setOpen((o) => !o)}
           >
-            {open ? <X size={22} /> : <Menu size={22} />}
+            {open ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
+
+        {/* Mobile Menu */}
         <AnimatePresence initial={false}>
           {open && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              initial={{
+                height: 0,
+                opacity: 0,
+                y: -20,
+              }}
+              animate={{
+                height: "auto",
+                opacity: 1,
+                y: 0,
+              }}
+              exit={{
+                height: 0,
+                opacity: 0,
+                y: -20,
+              }}
+              transition={{
+                duration: 0.3,
+              }}
               className="overflow-hidden md:hidden"
             >
-              <div className="flex flex-col gap-1 border-t border-white/10 px-5 py-4">
-                {links.map((l) => (
-                  <a
-                    key={l.href}
-                    href={l.href}
+              <div className="border-t border-white/10 px-5 py-4">
+                <div className="flex flex-col gap-2">
+                  {links.map((link) => (
+                    <motion.a
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      whileHover={{ x: 6 }}
+                      className="
+                        rounded-xl
+                        px-4
+                        py-3
+                        text-base
+                        font-medium
+                        text-white/90
+                        transition-colors
+                        hover:bg-white/5
+                        hover:text-white
+                      "
+                    >
+                      {link.label}
+                    </motion.a>
+                  ))}
+
+                  <motion.a
+                    href="#contact"
                     onClick={() => setOpen(false)}
-                    className="rounded-lg px-3 py-3 text-base font-medium text-white/90 hover:bg-white/5"
+                    whileHover={{ scale: 1.02 }}
+                    className="
+                      mt-3
+                      rounded-full
+                      bg-gradient-to-r
+                      from-white
+                      to-gray-300
+                      px-4
+                      py-3
+                      text-center
+                      text-xs
+                      font-semibold
+                      uppercase
+                      tracking-[0.18em]
+                      text-black
+                    "
                   >
-                    {l.label}
-                  </a>
-                ))}
-                <a
-                  href="#contact"
-                  onClick={() => setOpen(false)}
-                  className="mt-2 rounded-full bg-white px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-black"
-                >
-                  Book a Call
-                </a>
+                    Book a Call
+                  </motion.a>
+                </div>
               </div>
             </motion.div>
           )}
