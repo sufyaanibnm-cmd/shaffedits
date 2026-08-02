@@ -1,0 +1,203 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #fff;
+    color: #000;
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); letter-spacing: -0.02em; }
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee var(--marquee-duration, 40s) linear infinite; }
+.marquee-paused:hover .animate-marquee { animation-play-state: paused; }
+
+/* Preloader logo wipe */
+@keyframes wipeReveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+.animate-wipe { animation: wipeReveal 1s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+
+/* Spotlight card */
+.spotlight-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: border-color 200ms ease;
+}
+.spotlight-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--spot-opacity, 0);
+  transition: opacity 300ms ease;
+  background: radial-gradient(
+    320px circle at var(--x, 50%) var(--y, 50%),
+    var(--spot-color, rgba(255,255,255,0.18)),
+    transparent 60%
+  );
+}
+/* =========================================
+   React Phone Input — Shaffedits form field
+   Matches the underline style used by
+   `inputCls` in ContactCTA.tsx
+========================================= */
+
+.phone-container {
+  width: 100%;
+  font-family: "Inter", sans-serif;
+}
+
+.phone-input {
+  width: 100% !important;
+  height: 48px !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 0 !important;
+  padding-left: 52px !important;
+  font-size: 16px !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease;
+}
+
+.phone-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.phone-input:focus {
+  border-bottom: 1px solid #ffffff !important;
+}
+
+.phone-input.invalid-number {
+  border-bottom: 1px solid rgba(252, 165, 165, 0.7) !important; /* matches text-red-300 error state */
+}
+
+/* Flag/dial-code trigger button, sits inline on the underline */
+.phone-button {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid transparent !important; /* keeps height aligned, no double border */
+}
+
+.phone-button:hover,
+.phone-button.open {
+  background: transparent !important;
+}
+
+.phone-button .selected-flag {
+  background: transparent !important;
+  padding-left: 0 !important;
+}
+
+.phone-button .selected-flag:hover,
+.phone-button .selected-flag:focus {
+  background: transparent !important;
+}
+
+.phone-button .selected-flag .arrow {
+  border-top-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.phone-button .selected-flag .arrow.up {
+  border-bottom-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Dropdown panel */
+.phone-dropdown {
+  background: #0a0a0a !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 10px !important;
+  margin-top: 8px !important;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.6) !important;
+}
+
+.phone-dropdown .country {
+  padding: 10px 12px !important;
+}
+
+.phone-dropdown .country:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.phone-dropdown .country.highlight {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.phone-dropdown .country .country-name {
+  color: #ffffff !important;
+}
+
+.phone-dropdown .country .dial-code {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.phone-dropdown .search {
+  background: #111111 !important;
+  padding: 10px !important;
+}
+
+.phone-dropdown .search-box {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
+}
+
+.phone-dropdown .search-box::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.phone-dropdown .divider {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+/* swiper.css */
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  overflow: hidden;
+}
+
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Smooth fade animation */
+.swiper-slide-active img {
+  animation: fadeZoom 0.8s ease;
+}
+
+@keyframes fadeZoom {
+  from {
+    opacity: 0.8;
+    transform: scale(1.03);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
