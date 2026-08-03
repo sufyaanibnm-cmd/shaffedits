@@ -1,48 +1,29 @@
 import React from "react";
 
-import BL from "../../assets/logo/BL.png";
-import DRLayla from "../../assets/logo/DR Layla.png";
-import FinalHorizontal from "../../assets/logo/Final Horizontal Black.png";
-import JBKControls from "../../assets/logo/JBK Controls.png";
-import JRDental from "../../assets/logo/JR Dental Logo Horizontal Black.png";
-import LogoHorizontal from "../../assets/logo/Logo Horizontal Black.png";
-import Logotype from "../../assets/logo/Logotype Black.png";
-import Lspace from "../../assets/logo/Lspace_Logo_Horizontal.png";
-import SynergyOils from "../../assets/logo/Synergy Oils.png";
-import TheSheikhShawarma from "../../assets/logo/The Sheikh Shawarma Logo Black Version.png";
-import Untangle from "../../assets/logo/Untangle_LogosV6-05 copy.png";
-import Wanaromah from "../../assets/logo/Wanaromah.png";
-import Attea from "../../assets/logo/attea logo.png";
-import Kenrich from "../../assets/logo/kenrich international school.png";
-import OrganicOcean from "../../assets/logo/organic ocean.png";
-import Purple from "../../assets/logo/purple curve.png";
-import Saregama from "../../assets/logo/saregama.png";
-import SethGExims from "../../assets/logo/seth G exims.png";
-
 type Client = {
   name: string;
   logo: string;
 };
 
 const clients: Client[] = [
-  { name: "BL", logo: BL },
-  { name: "DR Layla", logo: DRLayla },
-  { name: "Final Horizontal", logo: FinalHorizontal },
-  { name: "JBK Controls", logo: JBKControls },
-  { name: "JR Dental", logo: JRDental },
-  { name: "Logo Horizontal", logo: LogoHorizontal },
-  { name: "Logotype", logo: Logotype },
-  { name: "Lspace", logo: Lspace },
-  { name: "Synergy Oils", logo: SynergyOils },
-  { name: "The Sheikh Shawarma", logo: TheSheikhShawarma },
-  { name: "Untangle", logo: Untangle },
-  { name: "Wanaromah", logo: Wanaromah },
-  { name: "Attea", logo: Attea },
-  { name: "Kenrich International School", logo: Kenrich },
-  { name: "Organic Ocean", logo: OrganicOcean },
-  { name: "Purple Curve", logo: Purple },
-  { name: "Saregama", logo: Saregama },
-  { name: "Seth G Exims", logo: SethGExims },
+  { name: "BL", logo: `${import.meta.env.BASE_URL}logo/BL.png` },
+  { name: "DR Layla", logo: `${import.meta.env.BASE_URL}logo/DR Layla.png` },
+  { name: "Final Horizontal", logo: `${import.meta.env.BASE_URL}logo/Final Horizontal Black.png` },
+  { name: "JBK Controls", logo: `${import.meta.env.BASE_URL}logo/JBK Controls.png` },
+  { name: "JR Dental", logo: `${import.meta.env.BASE_URL}logo/JR Dental Logo Horizontal Black.png` },
+  { name: "Logo Horizontal", logo: `${import.meta.env.BASE_URL}logo/Logo Horizontal Black.png` },
+  { name: "Logotype", logo: `${import.meta.env.BASE_URL}logo/Logotype Black.png` },
+  { name: "Lspace", logo: `${import.meta.env.BASE_URL}logo/Lspace_Logo_Horizontal.png` },
+  { name: "Synergy Oils", logo: `${import.meta.env.BASE_URL}logo/Synergy Oils.png` },
+  { name: "The Sheikh Shawarma", logo: `${import.meta.env.BASE_URL}logo/The Sheikh Shawarma Logo Black Version.png` },
+  { name: "Untangle", logo: `${import.meta.env.BASE_URL}logo/Untangle_LogosV6-05 copy.png` },
+  { name: "Wanaromah", logo: `${import.meta.env.BASE_URL}logo/Wanaromah.png` },
+  { name: "Attea", logo: `${import.meta.env.BASE_URL}logo/attea logo.png` },
+  { name: "Kenrich International School", logo: `${import.meta.env.BASE_URL}logo/kenrich international school.png` },
+  { name: "Organic Ocean", logo: `${import.meta.env.BASE_URL}logo/organic ocean.png` },
+  { name: "Purple Curve", logo: `${import.meta.env.BASE_URL}logo/purple curve.png` },
+  { name: "Saregama", logo: `${import.meta.env.BASE_URL}logo/saregama.png` },
+  { name: "Seth G Exims", logo: `${import.meta.env.BASE_URL}logo/seth G exims.png` },
 ];
 
 export function Clientele() {
