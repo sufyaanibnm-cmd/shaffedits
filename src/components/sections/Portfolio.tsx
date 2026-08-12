@@ -168,12 +168,12 @@ const portfolioProjects: PortfolioProject[] = [
   {
     name: "VisionCraft",
     tag: ".Branding + Presentation",
-    images: brandingImages,
+    images: [],
   },
   {
     name: "Campaign Pulse",
     tag: "Creative Campaign + Social Media",
-    images: campaignImages,
+    images: [],
   },
   {
     name: "MotionVerse",
@@ -188,12 +188,12 @@ const portfolioProjects: PortfolioProject[] = [
   {
     name: "ShopSphere",
     tag: "E-Commerce Store + Website",
-    images: ecommerceImages,
+    images: [],
   },
   {
     name: "Pixel Perfect",
     tag: "Website Banners + Assets",
-    images: bannerImages,
+    images: [],
   },
   {
     name: "TechVision",
