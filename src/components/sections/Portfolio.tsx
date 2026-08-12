@@ -223,7 +223,7 @@ const ProjectImage = memo(function ProjectImage({
       alt={alt}
       loading={eager ? "eager" : "lazy"}
       decoding="async"
-      className="h-full w-full object-cover grayscale transition-transform duration-700 group-hover:scale-105"
+      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
     />
   );
 });
