@@ -19,6 +19,7 @@ const team: { name: string; role: string; bio: string; image?: string }[] = [
   { name: "Zeena Qaida", role: "Graphic Designer", bio: "Creates thoughtful visual identities and creative assets that blend aesthetics with strategy." },
   { name: "Mohammed", role: "Web Developer", bio: "Builds fast, scalable, and user-focused websites designed for performance and long-term growth." },
   { name: "Rukshanda", role: "Video Editor", bio: "Shapes engaging visual stories through editing, pacing, motion, and cinematic storytelling." },
+  { name: "Sufyaan", role: "Web Developer", bio: "Builds modern, responsive, and high-performance digital experiences, turning creative concepts into seamless websites that are both visually engaging and technically robust" },
 ];
 
 function initials(name: string) {
